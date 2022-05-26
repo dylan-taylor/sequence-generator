@@ -1,4 +1,4 @@
-function no_cut = graph_cut(prob_matrix, node)
+function no_cut = graphcut(prob_matrix, node)
     cut_graph = prob_matrix;
     cut_graph(:,node) = 0;
     cut_graph = cut_graph~=0;
