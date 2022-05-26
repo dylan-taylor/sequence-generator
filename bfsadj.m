@@ -1,4 +1,4 @@
-function visited = BFS_adj(adj_matrix, source)
+function visited = bfsadj(adj_matrix, source)
     visits = zeros(1, length(adj_matrix));
     queue = [source];
     while ~isempty(queue)
