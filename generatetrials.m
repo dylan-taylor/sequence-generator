@@ -19,11 +19,14 @@ function trialsOutput = generatetrials(trialTypes, blockNum, testNum, sequenceLe
     permutations = generatepermutations(symbols, sequenceLength);
     perm_num = length(permutations);
 
-    trials_per_block = ((perm_num*testNum)/blockNum)+sequenceLength-1; % NEED TO CHECK IF NATURAL NUMBER
+    trialsPerBlock = ((perm_num*testNum)/blockNum)+sequenceLength-1;
+    if floor(trialsPerBlock)-trialsPerBlock ~= 0
+        error(strcat("Cannot evenly divide ", num2str(perm_num*testNum),  " trials over ", num2str(blockNum),  " blocks."))
+    end
 
     adj_matrix = generateadjmatrix(permutations);
 
-    trial_order = zeros(blockNum, trials_per_block);
+    trialOrder = zeros(blockNum, ceil(trialsPerBlock));
     order_idx = sequenceLength+1;
 
     freq_matrix = (adj_matrix*testNum);
@@ -31,26 +34,26 @@ function trialsOutput = generatetrials(trialTypes, blockNum, testNum, sequenceLe
     pos = randsample(1:perm_num, 1, true, sum(freq2prob(freq_matrix)));
 
     for block = 1:blockNum
-
         prob_matrix = freq2prob(freq_matrix~=0);
         pos_prob = augmentprobability(prob_matrix, pos);
         pos = randsample(1:perm_num, 1, true, pos_prob);
-        trial_order(block, 1:sequenceLength) = permutations(pos, :);
+        trialOrder(block, 1:sequenceLength) = permutations(pos, :);
         freq_matrix(:,pos)=max(freq_matrix(:,pos)-1, 0);
 
-        for trial = sequenceLength+1:trials_per_block
+        for trial = sequenceLength+1:trialsPerBlock
             prob_matrix = freq2prob(freq_matrix~=0);
             pos_prob = augmentprobability(prob_matrix, pos);
             pos = randsample(1:perm_num, 1, true, pos_prob);
-            trial_order(block, trial) = permutations(pos, sequenceLength);
+            trialOrder(block, trial) = permutations(pos, sequenceLength);
             freq_matrix(:,pos)=max(freq_matrix(:,pos)-1, 0);
         end
+
     end
 
-    trialsOutput = cell(blockNum, size(trial_order, 2));
+    trialsOutput = cell(blockNum, size(trialOrder, 2));
     for i = 1:blockNum
-        for j = 1:size(trial_order, 2)
-            trialsOutput(i,j) = syms(trial_order(i,j));
+        for j = 1:size(trialOrder, 2)
+            trialsOutput(i,j) = syms(trialOrder(i,j));
         end
     end
 end
