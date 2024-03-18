@@ -37,3 +37,22 @@ if trialTypeCounts(1)==60 && trialTypeCounts(2) == 60 && trialTypeCounts(3) == 6
 else
     warning("Two Sequence Test: Fail")
 end
+
+trials = generatetrials({1, 2, 3, 4}, 1, 2, 2);
+trials = [trials{:}];
+trialWindows = [trials(1:end-1)' trials(2:end)'];
+trialWindowCounts = [];
+for row = 1:size(trialWindows,1)
+    trialWindowCounts = [trialWindowCounts sum(min(trialWindows == [1 1], [], 2))];
+end
+if max(trialWindowCounts) == 2 && min(trialWindowCounts) == 2
+    disp("Test succ")
+end
+
+
+
+if trialTypeCounts(1)==60 && trialTypeCounts(2) == 60 && trialTypeCounts(3) == 60 && trialTypeCounts(4) == 60
+    disp("Two Sequence Test: Success")
+else
+    warning("Two Sequence Test: Fail")
+end
