@@ -13,7 +13,7 @@ def generate_trials(trial_types, block_num, test_num, sequence_length, save_csv 
     permutation_num = len(trial_permutations)
     trials_per_block = ((permutation_num*test_num)/block_num)+sequence_length-1
     if math.floor(trials_per_block) - trials_per_block != 0:
-        raise ValueError("Cannot evenly divide " + permutation_number*test_num + " trials over " + block_num + " blocks.")
+        raise ValueError("Cannot evenly divide " + permutation_num*test_num + " trials over " + block_num + " blocks.")
     trials_per_block = int(trials_per_block)     
     
     trial_graph = generate_trial_graph(trial_permutations, test_num, sequence_length)
