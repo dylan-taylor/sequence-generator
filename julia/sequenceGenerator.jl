@@ -1,5 +1,6 @@
 using Graphs
 using MetaGraphs
+using Random
 
 function generate_trials(trial_types, block_num, test_num, sequence_length; save_csv=false, file_name="trials.csv")
     trial_permutations_iter = Iterators.product(fill(trial_types, sequence_length) ...)
@@ -12,9 +13,11 @@ function generate_trials(trial_types, block_num, test_num, sequence_length; save
     trial_graph = generate_trial_graph(trial_permutations, test_num, sequence_length)
     
     trials = []
-    # initial_node = 
+    
+    initial_vertex = rand(vertices(trial_graph))
+    potential_vertex = get_good_vertices(trial_graph, vertex=initial_vertex)
 
-    return trial_graph
+    return potential_vertex
 end
 
 function generate_trial_graph(trial_permutations, test_num, sequence_length)
@@ -35,4 +38,16 @@ function generate_trial_graph(trial_permutations, test_num, sequence_length)
     end
 
     return weighted_trial_graph
+end
+
+function get_good_vertices(trial_graph; vertex=nothing, global_search=false)
+    augmented_graph = copy(trial_graph)
+    if ~global_search
+        if vertex ~= nothing
+            vertex_neighbours = neighborhood(trial_graph, vertex, 1)
+            if augmented_graph.vertex
+                
+            end
+        end
+    end
 end
